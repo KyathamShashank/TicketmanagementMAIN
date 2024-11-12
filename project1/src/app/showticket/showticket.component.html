@@ -1,0 +1,22 @@
+<div class="ticket-container">
+  <div 
+    *ngFor="let ticket of tickets; let i = index" 
+    class="ticket-box" 
+    [ngClass]="{'magenta-box': i % 2 === 0, 'blue-box': i % 2 !== 0}"
+  >
+    <h3 class="ticket-title">{{ ticket.ticketName }}</h3>
+    <p class="ticket-detail"><strong>Description:</strong> {{ ticket.ticketDescription }}</p>
+    <p class="ticket-detail"><strong>Assigned To:</strong> {{ ticket.ticketAssignTo }}</p>
+    <p class="ticket-detail"><strong>Assigned From:</strong> {{ ticket.ticketAssignFrom }}</p>
+    <p class="ticket-detail"><strong>Status:</strong> {{ ticket.ticketStatus }}</p>
+    <p class="ticket-detail"><strong>Created Date:</strong> {{ ticket.ticketCreatedDate | date:'mediumDate' }}</p>
+    <p class="ticket-detail"><strong>End Date:</strong> {{ ticket.ticketEndDate | date:'mediumDate' }}</p>
+
+    <!-- Delete Button -->
+    <button class="delete-button" (click)=" deleteTicketById(ticket.ticketId)">Delete</button> 
+  </div>
+</div>
+<div *ngIf="tickets.length==0||tickets.length==null">
+  <h3 style="text-align: center;">Tickets are not assign!!!</h3>
+
+</div>

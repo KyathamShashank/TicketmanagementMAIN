@@ -1,0 +1,164 @@
+<div class="header d-flex justify-content-between align-items-center p-3 bg-light">
+    <div class="filter d-flex align-items-center me-3">
+      <div class="form-group me-2">
+        <label for="sprintDropdown">Select Sprint</label>
+        <select class="form-select" id="sprintDropdown" [(ngModel)]="selectedSprint">
+          <option *ngFor="let s of sprint" [ngValue]="s.sprintId">{{ s.sprintName }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group me-2"> 
+        <label for="employeeDropdown">Check by Employee Name</label>
+        <select class="form-select" id="employeeDropdown" [(ngModel)]="selectedEmployee">
+          <option *ngFor="let employee of employees" [ngValue]="employee.employeeName">{{ employee.employeeName }}</option>
+        </select>
+      </div>
+      
+      <button class="btn btn-success btn-sm" (click)="onFilter()">Filter</button>
+      <button class="btn btn-primary" (click)="BackFromFilter()">RefreshFilter</button>
+    </div>
+  
+    <div class="project-info text-end">
+      <h3 class="mb-1" style="color: #757575;"><span style="color: #969696;">Project Name : </span>{{project.projectName}}</h3>
+      <div>
+        <button class="btn btn-danger me-2" [disabled]="showButton" (click)="CreateProject()" id="createTicketButton">Create Ticket</button>
+        <button class="btn btn-secondary" (click)="GoBack()">Back</button>
+      </div>
+    </div>
+  </div>
+  <div class="TicketContainer">
+    <div class="StatusContainer">
+      <h3 style="color: #928e8e;background-color: #adacf3;">TO DO <span class="CountContainer">{{todoTicket}}</span></h3>
+      <ng-container *ngFor="let ticket of tickets">{{ticket.ticketStatus}}
+        <div *ngIf="ticket.ticketStatus == 'ToDO'" class="ticket-card">
+          <h4 class="ticket-name">{{ ticket.ticketName }}</h4>
+          <p class="ticket-description">{{ ticket.ticketDescription }}</p>
+          
+          <!-- Check for ToDo status -->
+          <div  class="ticket-info">
+            <p>Raised By: {{ ticket.ticketAssignFrom }}</p>
+            <button class="assign-btn" [disabled]="showButton" (click)="showAssignEmployeeModal(ticket)">Assign Ticket</button>
+          </div></div>
+      </ng-container>
+    </div>
+    <div class="StatusContainer">
+      <h3 style="color: #928e8e;background-color: #adacf3;">IN PROGRESS <span class="CountContainer"> {{inProgressTicket}}</span></h3>
+      <ng-container *ngFor="let ticket of tickets">
+        <div *ngIf="ticket.ticketStatus == 'InProgress'" class="ticket-card">
+          <h4 class="ticket-name">{{ ticket.ticketName }}</h4>
+          <p class="ticket-description">{{ ticket.ticketDescription }}</p>
+          <div  class="ticket-info">
+            <p>Raised By: {{ ticket.ticketAssignFrom }}</p>
+            <p>Assigned To: {{ ticket.ticketAssignTo }}</p>
+          </div>
+          <div style="position: relative; height: 150px; border: 1px solid #ccc;">
+            <button type="button" [disabled]="!(this.ticket.ticketAssignTo==this.logInEmployee.employeeName)" (click)="ChangeStatus(ticket.ticketId)" class="btn btn-primary" style="width: 50px; position: absolute; top: -41px; right: 10px;">
+                <i class="bi bi-check-circle"></i>
+            </button>
+            <button class="btn btn-danger" (click)="fetchTicketImage(ticket.ticketId)">ShowImage</button>
+        </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="StatusContainer">
+      <h3 style="color: #928e8e;background-color: #adacf3;">DONE <span class="CountContainer">{{CompleteTicket}}</span> </h3>
+      <ng-container *ngFor="let ticket of tickets">
+        <div *ngIf="ticket.ticketStatus == 'Complete'" class="ticket-card">
+          <h4 class="ticket-name">{{ ticket.ticketName }}</h4>
+          <p class="ticket-description">{{ ticket.ticketDescription }}</p>
+          <div  class="ticket-info">
+            <p>Raised By: {{ ticket.ticketAssignFrom }}</p>
+            <p>Assigned To: {{ ticket.ticketAssignTo }}</p>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+<!--Create Modal for  Creating Ticket-->
+<div class="modal fade" id="createTicketModal" tabindex="-1" aria-labelledby="createTicketModalLabel" aria-hidden="true">
+  <div class="modal-dialog custom-modal-dialog">
+    <div class="modal-content custom-modal">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createTicketModalLabel">Create Ticket</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #ticketForm="ngForm" (ngSubmit)="onSubmit(ticketForm)">
+          <div class="mb-3">
+            <label for="ticketName" class="form-label">Ticket Name</label>
+            <input type="text" class="form-control" id="ticketName" [(ngModel)]="ticket.ticketName" name="tname" required>
+          </div>
+          <div class="mb-3">
+            <label for="ticketDescription" class="form-label">Ticket Description</label>
+            <textarea class="form-control" id="ticketDescription" [(ngModel)]="ticket.ticketDescription" name="tdesc" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="issueType" class="form-label">Issue Type</label>
+            <select class="form-select" id="tissueType" [(ngModel)]="ticket.ticketIssueType" name="tissueType" required>
+              <option *ngFor="let type of issueTypes" [ngValue]="type">{{ type }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="sprintName" class="form-label">Select  Sprint</label>
+            <select class="form-select" id="tissueType" [(ngModel)]="ticket.sprintId" name="tissueType" required>
+              <option *ngFor="let sprint of sprint" [ngValue]="sprint.sprintId">{{ sprint.sprintName }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="ticketPriority" class="form-label">Priority</label>
+            <select class="form-select" id="ticketPriority" [(ngModel)]="ticket.ticketPriority" name="tpriority" required>
+              <option *ngFor="let priority of priorityOptions" [ngValue]="priority">{{ priority }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" [(ngModel)]="ticket.ticketUpdatedDate" name="tendDate" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Create Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Modal For Assigning ticket-->
+<!-- Assign Employee Modal -->
+<div class="modal fade" id="assignEmpModal" tabindex="-1" aria-labelledby="assignEmpModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignEmpModalLabel">Assign Employee to Ticket</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submitEmployeeAssignment()">
+          <div class="form-group mb-3">
+            <label for="employeeSelectDropdown" class="form-label">Select Employee</label>
+            <select class="form-select" id="employeeSelectDropdown" [(ngModel)]="selectedEmployeeId" name="employeeId" required>
+              <ng-container *ngFor="let employee of employees">
+                  <option *ngIf="employee.employeeDesignation=='developer'" [value]="employee.employeeId">{{ employee.employeeName }}</option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            Choose IssuePicture: <input type="file" name="IssuePicture" (change)="onFileSelected($event)">
+          </div>
+          <button type="submit" class="btn btn-primary">Confirm Assignment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticket-image-modal" [class.show]="isModalOpen">
+  <div class="ticket-image-modal-content">
+    <span class="close-button" (click)="closeImageModal()">&times;</span>
+    <div *ngIf="ticketImageUrl">
+      <img [src]="ticketImageUrl" alt="Ticket Image" />
+    </div>
+  </div>
+</div>
+
+
+  

@@ -1,0 +1,21 @@
+.card-container {
+    margin-left: 13%;
+    display: flex;
+    gap: 15px; /* Space between cards */
+    flex-wrap: wrap; /* Allows cards to wrap to the next line if needed */
+     /* Centers the cards in the container */
+    padding: 20px;
+  }
+  
+  .project-card {
+    width: 250px; /* Fixed width */
+    margin-bottom: 15px;
+  }
+  
+  .project-header {
+    background-color: #0d3651; /* Background color for the project name */
+    color: white; /* Text color */
+    font-weight: bold;
+    text-align: center;
+  }
+  

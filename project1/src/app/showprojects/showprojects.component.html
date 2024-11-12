@@ -1,0 +1,19 @@
+<!-- <div class="project-list">
+  <div class="project-card" *ngFor="let project of projects; let i = index">
+    <h2 class="project-title">{{ project.projectName }}</h2>
+    <p class="project-description">{{ project.projectDescription }}</p>
+    <p class="project-description"> Date:{{ project.creationDate}}</p>
+    <p-chart type="doughnut" [data]="chartData[i]" [options]="options"></p-chart>
+    <button class="view-details">View Details</button>
+  </div>
+</div> -->
+
+<div class="project-list">
+  <div class="project-card" *ngFor="let project of projects; let i = index">
+    <h2 class="project-title">{{ project.projectName }}</h2>
+    <p class="project-description">{{ project.projectDescription}}</p>
+    <p class="project-description"> Creation Date:   {{ project.projectCreationDate| date:'yyyy-MM-dd'}}</p>
+    <p-chart type="doughnut" [data]="chartData[i]" [options]="options"></p-chart>
+    <button class="view-details" (click)="GoToTicket(project)">View Details</button>
+  </div>
+</div>

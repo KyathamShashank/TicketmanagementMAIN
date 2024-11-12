@@ -1,0 +1,11 @@
+<div class="card-container">
+    <div *ngFor="let project of projects" class="project-card" (click)="openProjectDetails(project)">
+      <div class="card border-primary" style="cursor: pointer;">
+        <div class="card-header project-header">{{ project.pname }}</div>
+        <div class="card-body">
+          <p class="card-text">{{ project.pdesc }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

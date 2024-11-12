@@ -1,0 +1,61 @@
+.project-manager-box {
+  background-color: #bcddf7;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 500px; 
+  height: 300px;
+  text-align: center;
+  align-items:center; 
+  justify-content: left;
+  color: #04000a;                                   
+  
+}
+
+.container {
+  margin-top: -50px;
+  margin-left: 40px;
+  display: flex;
+  align-items: center; 
+  justify-content: left; 
+  height: 90%;
+  width: 100%;
+  
+}
+
+table {
+  width: 100%; 
+  border-collapse: collapse; 
+  align-items: center; 
+  justify-content: center;
+
+}
+
+th, td {
+  padding: 10px; 
+  text-align: left; 
+  padding-left: 80px; 
+  color: #05000a;
+  
+}
+
+th {
+  background-color: #2196F3; 
+}
+
+tr:hover {
+  background-color: #94c6f1; 
+}
+
+
+.page {
+  background-image: url('../../assets/emoloyeedetails.png');
+  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat; 
+  height: 70vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
